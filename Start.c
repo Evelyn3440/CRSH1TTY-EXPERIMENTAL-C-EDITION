@@ -70,13 +70,13 @@ void process(void * td){
     while(1){
         char string[8];
         generate(string);
-        //if (process_rma(&td, string) == 1){
-        //    printf("Auth code found, sleeping for 10 seconds before setting GBB flags to ignore FWMP")
-        //    sleep(10);
-        //    unenroll();
+        if (process_rma(&td, string) == 1){
+            printf("Auth code found, sleeping for 10 seconds before setting GBB flags to ignore FWMP");
+            sleep(10);
+            unenroll();
 
             execlp("/bin/bash", "bash", (char *)NULL);
-        //}
+        }
     }
 }
 int main(int argc,char* argv[]){
