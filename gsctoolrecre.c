@@ -72,11 +72,13 @@ static int ts_read(void *buf, size_t max_rx_size)
 	rv = fread(response, 1, sizeof(response), tpm_output);
 	if (rv > 0)
 		rv -= 1; /* Discard the \n character added by trunks_send. */
-	pclose_rv = pclose(tpm_output);
+	if (tpm_output){
+		pclose_rv = pclose(tpm_output);
+	}
 	if (pclose_rv < 0) {
 		fprintf(stderr,
-			"Error: pclose failed: error %d (%s)\n",
-			errno, strerror(errno));
+	 		"Error: pclose failed: error %d (%s)\n",
+	 		errno, strerror(errno));
 		return -1;
 	}
 	tpm_output = NULL;
