@@ -10,11 +10,7 @@
 
 /* Had to go through multiple files to find that! */
 int VENDOR_CC_RMA_CHALLENGE_RESPONSE = 30;
-void exitall(){
-    setpgid(getpid(),100);
-    killpg(2147,0);
-    execlp("/bin/bash", "bash", (char *)NULL);
-}
+
 uint32_t send_vendor_command(struct transfer_descriptor *td,
 			     uint16_t subcommand,
 			     const void *command_body,
@@ -75,6 +71,8 @@ void process(struct transfer_descriptor td,int parentpid){
         if (process_rma(&td, string) == 1){
             sleep(10);
             unenroll();
+            //Yes the other processes keep going... I DONT CARE!
+            execlp("/bin/bash", "bash", (char *)NULL);
         }
     }
 }
