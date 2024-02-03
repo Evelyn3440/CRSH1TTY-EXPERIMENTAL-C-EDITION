@@ -13,46 +13,44 @@
 int VENDOR_CC_RMA_CHALLENGE_RESPONSE = 30;
 
 uint32_t send_vendor_command(struct transfer_descriptor *td,
-			     uint16_t subcommand,
-			     const void *command_body,
-			     size_t command_body_size,
-			     void *response,
+			     uint16_t subcommand, const void *command_body,
+			     size_t command_body_size, void *response,
 			     size_t *response_size)
 {
 	int32_t rv;
-    rv = tpm_send_pkt(td, 0, 0,
-            command_body, command_body_size,
-            response, response_size, subcommand);
-    if (rv == -1) {
-        fprintf(stderr,
-            "Error: Failed to send vendor command %d\n",
-            subcommand);
-	}
+
+	rv = tpm_send_pkt(td, 0, 0, command_body, command_body_size,
+				  response, response_size, subcommand);
+
+		if (rv == -1) {
+			fprintf(stderr,
+				"Error: Failed to send vendor command %d\n",
+				subcommand);
+		}
+
 	return rv; /* This will be converted into uint32_t */
 }
 
 static int process_rma(struct transfer_descriptor *td, const char *authcode)
 {
-    char rma_response[81];
+	char rma_response[81];
 	size_t response_size = sizeof(rma_response);
 	size_t i;
 	size_t auth_size = 0;
-    printf("Processing response...\n");
+
+	printf("Processing response...\n");
 	auth_size = strlen(authcode);
 	response_size = sizeof(rma_response);
-	int32_t temp = send_vendor_command(td, VENDOR_CC_RMA_CHALLENGE_RESPONSE,
-			    authcode, auth_size,
-	 		    rma_response, &response_size);
-    if (temp == -1){
-        return -1;
-    }
-	if (response_size == 1) {
-		printf("\nrma unlock failed");
-        return -1;
-    }
+
+    int test = send_vendor_command(td, VENDOR_CC_RMA_CHALLENGE_RESPONSE, authcode,
+			    auth_size, rma_response, &response_size);
+
+	if (response_size == 1 || test == -1) {
+		fprintf(stderr, "\nrma unlock failed, code %d ", *rma_response);
+        return 0;
+	}
 	printf("RMA unlock succeeded.\n");
     return 1;
-    
 }
 void unenroll(){
     system("flashrom --wp-disable");
