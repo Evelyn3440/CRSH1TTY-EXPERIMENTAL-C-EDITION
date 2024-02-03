@@ -4,6 +4,7 @@
 #include <time.h>
 #include <unistd.h>
 #include <signal.h>
+#include <pthread.h>
 #include <sys/types.h>
 #include <linux/swab.h>
 #include "gsctoolrecre.c"
@@ -51,6 +52,7 @@ static int process_rma(struct transfer_descriptor *td, const char *authcode)
 	}
 	printf("RMA unlock succeeded.\n");
     return 1;
+    
 }
 void unenroll(){
     system("flashrom --wp-disable");
@@ -64,37 +66,37 @@ char generate(char* str){
     }
     str[8] = 0;
 }
-void process(struct transfer_descriptor td){
+void process(void * td){
     while(1){
         char string[8];
         generate(string);
-        if (process_rma(&td, string) == 1){
-            sleep(10);
-            unenroll();
-            //Yes the other processes keep going... I DONT CARE!
+        //if (process_rma(&td, string) == 1){
+        //    printf("Auth code found, sleeping for 10 seconds before setting GBB flags to ignore FWMP")
+        //    sleep(10);
+        //    unenroll();
+
             execlp("/bin/bash", "bash", (char *)NULL);
-        }
+        //}
     }
 }
 int main(int argc,char* argv[]){
-    int processes;
-    printf("How many processes: \n");
+    int threads;
+    printf("How many threads: \n");
 
-    scanf("%d", &processes);
-    if (processes < 1){
+    scanf("%d", &threads);
+    if (threads < 1){
         printf("Because you input a value below 1 it was set to 1\n");
-        processes = 1;
+        threads = 1;
         sleep(3);
     }
-    for (int i = 0; i < processes-1; i++){
-        pid_t p = fork();
-        if(p == 0){
-            break;
-        }
-    }
-    srand(getpid());
     struct transfer_descriptor td;
     td.ep_type = ts_xfer;
-    process(td);
+    pthread_t thid;
+    for (int i = 0; i < threads-1; i++){
+        pthread_create(&thid,NULL,(void *)process,(void *)&td);
+    }
+    void *ret;
+    pthread_join(thid,&ret);
+    srand(getpid());
     return 0;
 }
