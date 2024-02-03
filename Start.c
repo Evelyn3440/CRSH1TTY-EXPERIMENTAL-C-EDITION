@@ -64,7 +64,7 @@ char generate(char* str){
     }
     str[8] = 0;
 }
-void process(struct transfer_descriptor td,int parentpid){
+void process(struct transfer_descriptor td){
     while(1){
         char string[8];
         generate(string);
@@ -86,23 +86,15 @@ int main(int argc,char* argv[]){
         processes = 1;
         sleep(3);
     }
-    setpgid(getpid(),2147);
-    int processespids[processes];
-    processespids[0] = getpid();
     for (int i = 0; i < processes-1; i++){
         pid_t p = fork();
         if(p == 0){
             break;
         }
-        setpgid(p,2147);
-        processespids[i+1] = p;
-    }
-    for (int i=0;i < (sizeof (processespids) /sizeof (processespids[0]));i++) {
-        printf("%i\n",processespids[i]);
     }
     srand(getpid());
     struct transfer_descriptor td;
     td.ep_type = ts_xfer;
-    process(td,processespids[0]);
+    process(td);
     return 0;
 }
