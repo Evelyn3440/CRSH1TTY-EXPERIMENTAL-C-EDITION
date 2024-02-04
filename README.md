@@ -39,10 +39,10 @@ CoolObivion759 - testing, researching, creating Whale, Inc. (Whelement members a
 
 Windows XP - The logo for CRSH1TTY
 
-Evelyn344 - This specific C implementation
-
 boeing 747 - emotional support and motivation
 
 And all these cool people ----> [![GitHub contributors](https://img.shields.io/github/contributors/Whelement/CRSH1TTY-public-beta)](https://github.com/Whelement/CRSH1TTY-public-beta/graphs/contributors)
+
+Evelyn344 - This specific C implementation
 
 Join our discord server! https://discord.gg/BK853xQSrg
