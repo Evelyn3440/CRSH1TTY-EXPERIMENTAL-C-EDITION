@@ -84,12 +84,12 @@ void process(void * td){
 }
 int main(int argc,char* argv[]){
     int threads;
-    printf("Warning! THIS DOESNT CLOSE WITHOUT YOU MURDERING YOUR TERMINAL! BE WARNED!");
+    printf("Warning! THIS DOESNT CLOSE WITHOUT YOU MURDERING YOUR TERMINAL! BE WARNED!\n");
     printf("How many threads: \n");
 
     scanf("%d", &threads);
     if (threads < 1){
-        printf("Because you input a value below 1 it was set to 1\n");
+        printf("Because you input a value below 1 it was set to 1\n\n");
         threads = 1;
         sleep(3);
     }
