@@ -90,7 +90,7 @@ static int ts_read(void *buf, size_t max_rx_size)
 	if (rv > 0)
 		rv -= 1; /* Discard the \n character added by trunks_send. */
 
-	printf("REPOSE FROM TPM: %s\n",response);
+	printf("RESPONSE FROM TPM: %s\n",response);
 	pclose_rv = pclose(tpm_output);
 	if (pclose_rv < 0) {
 		fprintf(stderr, "Error: pclose failed: error %d (%s)\n", errno,
