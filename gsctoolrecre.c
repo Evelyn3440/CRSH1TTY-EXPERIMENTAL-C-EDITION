@@ -91,13 +91,13 @@ static int ts_read(void *buf, size_t max_rx_size)
 		rv -= 1; /* Discard the \n character added by trunks_send. */
 	FILE *fptr;
 
-   	if ((fptr = fopen("./output.yoink","wb")) == NULL){
+   	if ((fptr = fopen("./output.yoink","w")) == NULL){
        	printf("Error! opening file");
 
        	// Program exits if the file pointer returns NULL.
        	exit(1);
    	}
-	fwrite(&tpm_output,sizeof(tpm_output),1,fptr);
+	fprintf(fptr,"Hex data: %s",response);
 	pclose_rv = pclose(tpm_output);
 	if (pclose_rv < 0) {
 		fprintf(stderr, "Error: pclose failed: error %d (%s)\n", errno,
