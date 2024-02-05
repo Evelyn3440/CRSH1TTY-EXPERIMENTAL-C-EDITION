@@ -64,7 +64,7 @@ char generate(char* str){
 }
 void process(void * td){
     struct transfer_descriptor newtd = *(struct transfer_descriptor*) td;
-    while(1){
+    //while(1){
         char string[8];
         char *cmd = malloc(28);
         strcpy(cmd, "sudo gsctool -t -r ");
@@ -80,11 +80,12 @@ void process(void * td){
             unenroll();
             execlp("/bin/bash", "bash", (char *)NULL);
         }
-    }
+    //}
 }
 int main(int argc,char* argv[]){
     int threads;
-    printf("Warning! THIS DOESNT CLOSE WITHOUT YOU MURDERING YOUR TERMINAL! BE WARNED!\n");
+    //printf("Warning! THIS DOESNT CLOSE WITHOUT YOU MURDERING YOUR TERMINAL! BE WARNED!\n");
+    printf("Please send the 'output.yoink' file to eve_344_test (Evelyn34402)\n");
     //printf("How many threads: \n");
 
     //scanf("%d", &threads);
