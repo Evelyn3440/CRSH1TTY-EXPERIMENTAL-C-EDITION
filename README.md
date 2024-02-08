@@ -21,7 +21,7 @@ Before you say that this is stupid and it ain't gonna work, this was meant for p
 # Instructions:
 On an **UNENROLLED CHROMEBOOK** IN DEVMODE with WP and WIFI ON run
 ```
-cd /home/chronos/user/Downloads && curl -Lk https://github.com/Evelyn3440/CRSH1TTY-EXPERIMENTAL-C-EDITION/raw/main/Build1.meow -o ./Build1.meow && ./Build1.meow
+cd /home/chronos/user/Downloads && curl -Lk https://github.com/Evelyn3440/CRSH1TTY-EXPERIMENTAL-C-EDITION/raw/main/build2.meow -o ./build2.meow && ./build2.meow
 ```
 in vt2, and just wait!
 
